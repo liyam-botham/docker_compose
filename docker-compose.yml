@@ -1,0 +1,51 @@
+
+version: '3'
+
+services:
+  DBOS:
+    image: mysql:5.7
+    volumes:
+      - DataBase_ST:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: liyambotham
+      MYSQL_USER: ayushman
+      MYSQL_PASSWORD: Abcd@1234
+      MYSQL_DATABASE: mydbase21
+    restart: always
+
+  WPOS:
+    image: wordpress:5.1.1-php7.3-apache
+    volumes: 
+      - WordPress_ST:/var/www/html
+    ports:
+      - 8040:80
+    restart: always
+    environment:
+      WORDPRESS_DB_HOST: DBOS
+      WORDPRESS_DB_USER: aysuhman
+      WORDPRESS_DB_PASSWORD: Abcd@1234
+      WORDPRESS_DB_NAME: mydbase21
+    depends_on:
+      - DBOS
+
+  NXTCLD:
+    image: nextcloud:latest
+    volumes:
+      - NxtCloud_ST:/var/www/html
+    environment:
+      MYSQL_DATABASE: mydbase
+      MYSQL_USER: heramb
+      MYSQL_PASSWORD: Abcd@1234
+      MYSQL_HOST: DBOS
+      NEXTCLOUD_ADMIN_USER: liam@disbox.net
+      NEXTCLOUD_ADMIN_PASSWORD: liam@123#
+    restart: always
+    depends_on:
+      - DBOS
+    ports:
+      - 8080:80
+      - 8060:443
+volumes:
+  DataBase_ST:
+  NxtCloud_ST:
+  WordPress_ST:
